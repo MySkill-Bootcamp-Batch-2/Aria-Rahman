@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tugas DOM Aria Rahman</title>
+    <style>
+      #btn-onchange:hover {
+        background-color: aqua;
+      }
+      input {
+        padding: 10px;
+        margin: 10px;
+        width: 20%;
+      }
+      button {
+        padding: 10px;
+        margin: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Tugas Pertemuan 5 -->
+    <h2>Tugas Pertemuan 5</h2>
+    <h3>Aria Rahman</h3>
+    <input type="text" id="masukan" /> <br />
+    <button id="btn-onchange">Submit Tugas</button>
+    <button id="btn-change">Styling</button>
+    <h1 id="heading"></h1>
+
+    <!-- Akhir Tugas Pertemuan 5 -->
+
+    <script>
+      //   JS Tugas Pertemuan 5
+      document.getElementById("btn-onchange").onclick = run;
+      function run() {
+        var masukan = document.getElementById("masukan").value;
+        if (masukan == "") {
+          alert("Apanih ko kosong!!!");
+        } else {
+          document.getElementById("heading").innerHTML = masukan;
+          const x = document.getElementById("masukan");
+          x.value = x.value.toUpperCase();
+        }
+      }
+
+      document.getElementById("btn-change").onclick = function () {
+        document.getElementById("heading").style.color = "blue";
+        document.getElementById("heading").style.fontSize = "70px";
+      };
+    </script>
+  </body>
+</html>
