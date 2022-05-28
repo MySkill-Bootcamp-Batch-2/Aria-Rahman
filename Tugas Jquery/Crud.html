@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crud-Aria Rahman</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+    <style>
+      #isi {
+        border: 5px solid aqua;
+        background-color: lightgrey;
+        border-radius: 20px;
+        padding: 10px;
+        margin: 10px;
+      }
+      table,
+      th,
+      tr,
+      td {
+        border: 3px solid rgb(25, 58, 134);
+        border-radius: 10px;
+        padding: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="isi">
+      <center>
+        <div id="page-list">
+          <h1>DATA PT ARIA RAHMAN JAYA</h1>
+          <br /><br />
+          <table>
+            <tr>
+              <th>No</th>
+              <th>Nama</th>
+              <th>Alamat</th>
+              <th>Tahun Lahir</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+            <tr>
+              <tbody id="body-table"></tbody>
+            </tr>
+          </table>
+          <br /><br />
+          <button id="btn-add">Tambah Data</button>
+        </div>
+
+        <div id="page-form">
+          <h1>Form Penambahan Data</h1>
+          <form id="form">
+            <input
+              type="text"
+              id="nama"
+              placeholder="&#xf007; Masukan Nama Lengkap"
+              maxlength="25"
+              style="font-family: Arial, FontAwesome"
+              onkeypress="return event.charCode >= 65 && event.charCode <= 90 || event.charCode >= 97 && event.charCode <= 122 || event.charCode == 32 "
+              required
+            />
+            <input type="text" id="alamat" placeholder="&#xf2bb; Alamat Kota Anda" style="font-family: Arial, FontAwesome" required />
+            <input type="number" id="lahir" placeholder="&#xf073; Masukan Tahun Lahir" style="font-family: Arial, FontAwesome" required />
+            <input type="text" id="status" placeholder="&#xf19c; Masukan Status" style="font-family: Arial, FontAwesome" required />
+            <br /><br />
+            <button type="submit">Tambah Data</button>
+            <button id="btn-back">Kembali</button>
+          </form>
+        </div>
+
+        <div id="page-form-edit">
+          <h1>Form Pengeditan Data</h1>
+          <form id="form-edit">
+            <input
+              type="text"
+              id="nama-edit"
+              placeholder="&#xf007; Masukan Nama Lengkap"
+              maxlength="25"
+              style="font-family: Arial, FontAwesome"
+              onkeypress="return event.charCode >= 65 && event.charCode <= 90 || event.charCode >= 97 && event.charCode <= 122 || event.charCode == 32 "
+              required
+            />
+            <input type="text" id="alamat-edit" placeholder="&#xf2bb; Alamat Kota Anda" style="font-family: Arial, FontAwesome" required />
+            <input type="number" id="lahir-edit" placeholder="&#xf073; Masukan Tahun Lahir" style="font-family: Arial, FontAwesome" required />
+            <input type="text" id="status-edit" placeholder="&#xf19c; Masukan Status" style="font-family: Arial, FontAwesome" required />
+            <input type="hidden" id="id-edit" placeholder="id" />
+            <br /><br />
+            <button type="submit">Edit</button>
+            <button id="btn-back">Kembali</button>
+          </form>
+        </div>
+      </center>
+    </div>
+    <!-- Akhir Tampilan ........................................................... -->
+
+    <script>
+      $(document).ready(function () {
+        // Single Page Application
+        $("#page-form").hide();
+        $("#page-form-edit").hide();
+        let index_edit = null;
+
+        // Penyimpanan data karyawan
+        const karyawan = [];
+
+        // Cetak Karyawan
+        karyawan.forEach(function (item, index) {
+          $("#body-table").append(`
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${item.nama}</td>
+                    <td>${item.alamat}</td>
+                    <td>${item.lahir}</td>
+                    <td>${item.status}</td>
+                    <td>
+                        <button class="btn-edit" data-index="${index}">Edit</button>
+                        <button class="btn-delete" data-index="${index}">Hapus</button>
+                    </td>
+                </tr>
+            `);
+        });
+
+        // fungsi refresh table
+        function refresh_table() {
+          $("#body-table").empty();
+
+          karyawan.forEach(function (item, index) {
+            $("#body-table").append(`
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${item.nama}</td>
+                    <td>${item.alamat}</td>
+                    <td>${item.lahir}</td>
+                    <td>${item.status}</td>
+                    <td>
+                        <button class="btn-edit" data-index="${index}">Edit</button>
+                        <button class="btn-delete" data-index="${index}">Hapus</button>
+                    </td>
+                </tr>
+            `);
+          });
+
+          // Delete
+          $(".btn-delete").click(function () {
+            const index = $(this).attr("data-index");
+            karyawan.splice(index, 1);
+
+            refresh_table();
+          });
+
+          // Edit
+          $(".btn-edit").click(function () {
+            const index = $(this).attr("data-index");
+            $("#id-edit").val(karyawan[index].id);
+            $("#nama-edit").val(karyawan[index].nama);
+            $("#alamat-edit").val(karyawan[index].alamat);
+            $("#lahir-edit").val(karyawan[index].lahir);
+            $("#status-edit").val(karyawan[index].status);
+
+            index_edit = index;
+
+            $("#page-form-edit").show();
+            $("#page-list").hide();
+            $("#page-form").hide();
+          });
+        }
+
+        // button
+        // Penambahan
+        $("#btn-add").click(function () {
+          $("#page-list").hide();
+          $("#page-form").show();
+          $("#page-form-edit").hide();
+        });
+
+        // Kembali
+        $("#btn-back").click(function () {
+          $("#page-list").show();
+          $("#page-form").hide();
+          $("#page-form-edit").hide();
+        });
+
+        // Delete
+        $(".btn-delete").click(function () {
+          const index = $(this).attr("data-index");
+          karyawan.splice(index, 1);
+
+          refresh_table();
+        });
+
+        // Edit
+        $(".btn-edit").click(function () {
+          const index = $(this).attr("data-index");
+          $("#id-edit").val(karyawan[index].id);
+          $("#nama-edit").val(karyawan[index].nama);
+          $("#alamat-edit").val(karyawan[index].alamat);
+          $("#lahir-edit").val(karyawan[index].lahir);
+          $("#status-edit").val(karyawan[index].status);
+
+          index_edit = index;
+
+          $("#page-form-edit").show();
+          $("#page-list").hide();
+          $("#page-form").hide();
+        });
+
+        // Isi Data
+        $("#form").submit(function (tambah) {
+          tambah.preventDefault();
+          const karyawan_baru = {
+            id: Math.random(),
+            nama: $("#nama").val(),
+            alamat: $("#alamat").val(),
+            lahir: $("#lahir").val(),
+            status: $("#status").val(),
+          };
+
+          $("#nama").val(""), $("#alamat").val(""), $("#lahir").val(""), $("#status").val(""), karyawan.push(karyawan_baru);
+
+          $("#page-list").show();
+          $("#page-form").hide();
+          $("#page-form-edit").hide();
+
+          refresh_table();
+        });
+
+        $("#form-edit").submit(function (tambah) {
+          tambah.preventDefault();
+          const karyawan_edit = {
+            id: $("id-edit").val(),
+            nama: $("#nama-edit").val(),
+            alamat: $("#alamat-edit").val(),
+            lahir: $("#lahir-edit").val(),
+            status: $("#status-edit").val(),
+          };
+
+          karyawan[index_edit] = karyawan_edit;
+
+          $("#page-list").show();
+          $("#page-form").hide();
+          $("#page-form-edit").hide();
+
+          refresh_table();
+        });
+      });
+    </script>
+  </body>
+</html>
